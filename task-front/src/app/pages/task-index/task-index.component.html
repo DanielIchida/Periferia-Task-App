@@ -1,0 +1,22 @@
+<app-nav-bar
+  (isOpenModal)="eventOpenNewModal($event)"
+/>
+<section>
+  <app-modal-task
+    [isEdit]="isEditModal()"
+    [isOpen]="openNewModal()"
+    [taskData]="taskCurrent()"
+    (closeModel)="closeNewModal()"
+    (save)="saveOrEditTask($event)"
+  />
+  <app-table-task
+    [tasks]="tasks()"
+    [isLoading]="isLoading()"
+    [errorMessage]="error()"
+    [isEmpty]="isEmpty()"
+    [numberPaginate]="numPaginate()"
+    (paginateChange)="loadingTask($event)"
+    (updateTaskId)="updateModalTask($event)"
+    (deleteTaskId)="createAlertDelete($event)"
+  />
+</section>

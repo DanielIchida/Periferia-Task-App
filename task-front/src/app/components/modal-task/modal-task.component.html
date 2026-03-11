@@ -1,0 +1,90 @@
+@if (isOpen()) {
+  <dialog  class="modal modal-open modal-bottom sm:modal-middle" (click)="closeOutsideClick($event)">
+    <div class="modal-box">
+      <h3 class="text-lg font-bold mb-5">@if (isEdit()) { Actualizar } @else { Crear } Tarea</h3>
+      <form [formGroup]="taskForm" (submit)="editTask()">
+        @if (taskForm.get('title')?.touched) {
+          <span class="label-text-alt text-error">
+                @if (hasError('title', 'required')) { *Requerido }
+              </span>
+        }
+        <input type="text"
+               formControlName="title"
+               placeholder="Ingresar titulo"
+               class="w-full input"
+               [class.input-error]="isFieldInvalid('title')"
+        />
+        @if (isFieldInvalid('title')) {
+          <div class="text-error text-sm mt-1 mb-5 space-y-1">
+            @if (hasError('title', 'required')) {
+              <div class="flex items-center gap-1">
+                <span>•</span> El título es obligatorio
+              </div>
+            }
+            @if (hasError('title', 'minlength')) {
+              <div class="flex items-center gap-1">
+                <span>•</span>
+                Mínimo {{ getError('title', 'minlength')?.requiredLength }} caracteres
+                (actual: {{ getError('title', 'minlength')?.actualLength }})
+              </div>
+            }
+            @if (hasError('title', 'maxlength')) {
+              <div class="flex items-center gap-1">
+                <span>•</span>
+                Máximo {{ getError('title', 'maxlength')?.requiredLength }} caracteres
+                (actual: {{ getError('title', 'maxlength')?.actualLength }})
+              </div>
+            }
+          </div>
+        }
+        @if (taskForm.get('description')?.touched) {
+          <span class="label-text-alt">
+                {{ taskForm.get('description')?.value?.length || 0 }}/150
+          </span>
+        }
+        <textarea
+          formControlName="description"
+          placeholder="Ingresar descripcion"
+          class="textarea w-full mb-5 mt-3"
+          [class.textarea-error]="isFieldInvalid('description')"
+        ></textarea>
+        @if (isFieldInvalid('description')) {
+          <div class="text-error text-sm mt-1 space-y-1">
+            @if (hasError('description', 'maxlength')) {
+              <div class="flex items-center gap-1">
+                <span>•</span>
+                Máximo {{ getError('description', 'maxlength')?.requiredLength }} caracteres
+                (actual: {{ getError('description', 'maxlength')?.actualLength }})
+              </div>
+            }
+          </div>
+        }
+        @if (isEdit()) {
+          <select
+            class="select appearance-none w-full mb-5"
+            formControlName="status"
+            [class.select-error]="isFieldInvalid('status')"
+          >
+            <option disabled selected>Seleccionar Estado</option>
+            <option value="PENDING">Pendiente</option>
+            <option value="IN_PROGRESS">En progreso</option>
+            <option value="DONE">Completada</option>
+          </select>
+          <!-- Mensajes de error para estado -->
+          @if (isFieldInvalid('status')) {
+            <div class="text-error text-sm mt-1">
+              @if (hasError('status', 'required')) {
+                <div class="flex items-center gap-1">
+                  <span>•</span> Debes seleccionar un estado
+                </div>
+              }
+            </div>
+          }
+        }
+        <button class="btn" type="submit">
+          @if (isEdit()) { Actualizar } @else { Registrar }
+        </button>
+      </form>
+    </div>
+  </dialog>
+}

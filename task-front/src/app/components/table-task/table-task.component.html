@@ -1,0 +1,62 @@
+<div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+  <table class="table mb-5">
+    <thead>
+    <tr class="text-center">
+      <th>#</th>
+      <th>Title</th>
+      <th>Description</th>
+      <th>Status</th>
+      <th>Created At</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+      @if (errorMessage()) {
+        <tr>
+          <td colspan="6" class="text-center">
+            <h1>{{ errorMessage() }}</h1>
+          </td>
+        </tr>
+      }
+      @if (isLoading()) {
+        <tr>
+          <td colspan="6" class="text-center">
+            <span class="loading loading-bars loading-xl"></span>
+          </td>
+        </tr>
+      }
+      @if (isEmpty() && !isLoading()) {
+        <tr>
+          <td colspan="6" class="text-center">
+            <h1>No hay tareas por el momento</h1>
+          </td>
+        </tr>
+      }
+      @for (task of tasks(); track task.id) {
+        <tr class="text-center">
+          <td>{{ task.id }}</td>
+          <td>{{ task.title}}</td>
+          <td>{{ task.description }}</td>
+          <td>{{ task.status }}</td>
+          <td>{{ task.createdAt }}</td>
+          <td>
+            <button (click)="eventUpdateModal(task)" class="btn btn-warning mx-4">Actualizar</button>
+            <button (click)="eventDeleteModal(task)" class="btn btn-error">Eliminar</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+  <div class="join flex justify-center">
+    @if (numberPaginate() > 1) {
+      @for (pagina of numberPaginate() | range ; track $index) {
+        <input class="join-item btn btn-square"
+               type="radio" name="options"
+               aria-label="{{ pagina + 1 }}"
+               (click)="eventChangePaginate(pagina)"
+               [checked]="pagina == 0 ? 'checked' : ''"
+        />
+      }
+    }
+  </div>
+</div>
